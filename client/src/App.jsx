@@ -4,12 +4,15 @@ import About from "./pages/About";
 import Profile from "./pages/Profile";
 import SignIn from "./pages/SignIn";
 import Signup from "./pages/SignUp";
+import {Header , Footer} from "./components/index";
+
 
 function App() {
 
 
   return (
     <BrowserRouter>
+    <Header/>
  <Routes>
   <Route path="/" element={<Home/>}/>
   <Route path="/about" element={<About/>}/>
@@ -17,6 +20,8 @@ function App() {
   <Route path="/Sign-in" element={<SignIn/>}/>
   <Route path="/Sing-up" element={<Signup/>}/>
  </Routes>
+
+<Footer/>
     </BrowserRouter>
   )
 }
