@@ -8,8 +8,42 @@ import { Dropdown } from "@/components/base/dropdown/dropdown";
 import { cx } from "@/utils/cx";
 import { AvatarLabelGroup } from "../avatar/avatar-label-group";
 
+const THEME_STORAGE_KEY = "theme";
+
+const setDocumentTheme = (isDark: boolean) => {
+    document.documentElement.classList.toggle("dark-mode", isDark);
+    document.documentElement.classList.toggle("dark", isDark);
+    localStorage.setItem(THEME_STORAGE_KEY, isDark ? "dark" : "light");
+};
+
+const getInitialThemeSelection = (): Selection => {
+    if (typeof document === "undefined") {
+        return new Set(["light-mode"]);
+    }
+
+    const stored = localStorage.getItem(THEME_STORAGE_KEY);
+    const isDark =
+        stored === "dark" ||
+        (!stored && window.matchMedia("(prefers-color-scheme: dark)").matches) ||
+        document.documentElement.classList.contains("dark-mode") ||
+        document.documentElement.classList.contains("dark");
+
+    setDocumentTheme(isDark);
+    return isDark ? new Set(["dark-mode"]) : new Set(["light-mode"]);
+};
+
+const applyTheme = (keys: Selection) => {
+    const isDark = keys !== "all" && keys.has("dark-mode");
+    setDocumentTheme(isDark);
+};
+
 export const DropdownAvatar = () => {
-    const [selectedTheme, setSelectedTheme] = useState<Selection>(new Set(["light-mode"]));
+    const [selectedTheme, setSelectedTheme] = useState<Selection>(getInitialThemeSelection);
+
+    const handleThemeChange = (keys: Selection) => {
+        setSelectedTheme(keys);
+        applyTheme(keys);
+    };
 
     return (
         <Dropdown.Root>
@@ -41,7 +75,12 @@ export const DropdownAvatar = () => {
                     <Dropdown.Item icon={Settings01} addon="⌘S">
                         Settings
                     </Dropdown.Item>
-                    <Dropdown.Section selectionMode="single" selectedKeys={selectedTheme} onSelectionChange={setSelectedTheme}>
+                    <Dropdown.Section
+                        selectionMode="single"
+                        selectedKeys={selectedTheme}
+                        onSelectionChange={handleThemeChange}
+                        disallowEmptySelection={false}
+                    >
                         <Dropdown.Item id="dark-mode" icon={Moon01} selectionIndicator="toggle">
                             Dark mode
                         </Dropdown.Item>

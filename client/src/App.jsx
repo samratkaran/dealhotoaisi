@@ -12,16 +12,19 @@ function App() {
 
   return (
     <BrowserRouter>
-    <Header/>
- <Routes>
-  <Route path="/" element={<Home/>}/>
-  <Route path="/about" element={<About/>}/>
-  <Route path="/Profile" element={<Profile/>}/>
-  <Route path="/Sign-in" element={<SignIn/>}/>
-  <Route path="/Sing-up" element={<Signup/>}/>
- </Routes>
-
-<Footer/>
+      <div className="flex min-h-screen flex-col bg-background text-foreground">
+        <Header />
+        <main className="flex-1">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/Profile" element={<Profile />} />
+            <Route path="/Sign-in" element={<SignIn />} />
+            <Route path="/Sing-up" element={<Signup />} />
+          </Routes>
+        </main>
+        <Footer />
+      </div>
     </BrowserRouter>
   )
 }
