@@ -4,8 +4,8 @@ import About from "./pages/About";
 
 import SignIn from "./pages/SignIn";
 import Signup from "./pages/SignUp";
-import { Footer} from "./components/index";
-import Header from "./components/Header";
+import { Footer, Header} from "./components/index";
+
 import Profile from "./pages/Profile";
 import Home from "./pages/Home";
 
@@ -17,7 +17,7 @@ function App() {
     <BrowserRouter>
       <div className="flex min-h-screen flex-col bg-background text-foreground">
         <Header/>
-        <main className="flex-1">
+        <main className="flex-1 ">
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/about" element={<About />} />
