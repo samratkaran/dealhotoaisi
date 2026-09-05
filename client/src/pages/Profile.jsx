@@ -1,7 +1,7 @@
 
 function Profile() {
   return (
-    <div>
+    <div className="bg-red-700">
       Profile Page
     </div>
   )
