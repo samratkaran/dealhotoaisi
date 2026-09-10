@@ -206,7 +206,7 @@ export default function Header() {
 
               {activeMenu === menu && (
                 <div
-                  className="absolute left-1/2 top-full w-[650px] -translate-x-1/2 pt-3"
+                  className="absolute left-1/2 top-full w-162.5 -translate-x-1/2 pt-3"
                   onMouseEnter={() => setActiveMenu(menu)}
                   onMouseLeave={() => setActiveMenu(null)}
                 >
