@@ -1,5 +1,18 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
+
+const showSignupError = (message) => {
+  const msg = (message || '').toLowerCase()
+  let text = 'User already exists try with different username or email'
+  if (msg.includes('username')) text = 'Username already exists try with different username'
+  else if (msg.includes('email')) text = 'Email already exists try with different email'
+
+  toast.error(text, { id: 'signup-error' })
+}
+
+// Edit this message to change the toast shown after a successful signup
+const SIGNUP_SUCCESS_MESSAGE = 'You are now signed in'
 
 const SignUp = () => {
   const [formData, setFormData] = useState({
@@ -8,8 +21,8 @@ const SignUp = () => {
     password: ''
   });
   const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState(null)
   const [loading, setLoading] = useState(false)
+  const submittingRef = useRef(false)
   const navigate = useNavigate()
 
   const handleChange = (e) => {
@@ -20,8 +33,10 @@ const SignUp = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (submittingRef.current) return
+    submittingRef.current = true
+    setLoading(true)
     try {
-      setLoading(true)
       const res = await fetch('/api/auth/signup', 
         {
           method:'POST',
@@ -33,17 +48,16 @@ const SignUp = () => {
         })
         const data = await res.json()
         if(data.success === false){
-          setError(data.message)
-          setLoading(false)
+          showSignupError(data.message)
           return
         }
-        setLoading(false)
-        console.log(data)
-        setError(null)
+        toast.success(SIGNUP_SUCCESS_MESSAGE, { id: 'signup-success' })
         navigate('/signin')
     } catch (error) {
+      toast.error(error.message || 'Something went wrong', { id: 'signup-error' })
+    } finally {
+      submittingRef.current = false
       setLoading(false)
-      setError(error.message)
     }
   
   };
@@ -278,7 +292,6 @@ console.log(formData)
                 Sign in
               </a>
             </p>
-            {error && <p className='text-red-500 mt-5'>{error}</p>}
           </div>
         </div>
       </div>

@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
 
 import About from "./pages/About";
 
@@ -15,6 +16,18 @@ function App() {
 
   return (
     <BrowserRouter>
+      <Toaster
+        position="top-center"
+        toastOptions={{
+          duration: 4000,
+          error: {
+            style: {
+              background: '#0f172a',
+              color: '#fff',
+            },
+          },
+        }}
+      />
       <div className="flex min-h-screen flex-col bg-background text-foreground">
         <Header/>
         <main className="flex-1 ">
