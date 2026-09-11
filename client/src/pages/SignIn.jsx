@@ -1,10 +1,290 @@
+import React, { useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 
-function SignIn() {
+const showSigninError = (message) => {
+  const msg = (message || '').toLowerCase();
+  let text = 'Wrong credentials. Please check your email and password.';
+  
+  if (msg.includes('not found') || msg.includes('no user')) {
+    text = 'User not found. Please check your email';
+  } else if (msg.includes('password') || msg.includes('incorrect')) {
+    text = 'Invalid password. Please try again.';
+  } else if (msg.includes('credential')) {
+    text = 'Wrong credentials. Please check your email and password.';
+  }
+
+  toast.error(text, { id: 'signin-error' });
+};
+
+const SIGNIN_SUCCESS_MESSAGE = 'Welcome back!';
+
+const SignIn = () => {
+  const [formData, setFormData] = useState({
+    email: '',
+    password: ''
+  });
+  const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
+  
+ 
+  const navigate = useNavigate();
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault(); 
+    try {
+      setLoading(true);
+      const res = await fetch('/api/auth/signin', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+      });
+      
+      const data = await res.json();
+      
+      if (data.success === false) {
+        showSigninError(data.message);
+        return;
+      }
+      
+      toast.success(SIGNIN_SUCCESS_MESSAGE, { id: 'signin-success' });
+      navigate('/'); // Adjust route as needed
+      
+    } catch (error) {
+      toast.error(error.message || 'Something went wrong', { id: 'signin-error' });
+    } finally {
+     
+      setLoading(false);
+    }
+  };
+
   return (
-    <div>
-      Sign In Page
-    </div>
-  )
-}
+    <>
+      <style>{`
+        @keyframes fadeInUp {
+          from { opacity: 0; transform: translateY(20px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes slideInLeft {
+          from { opacity: 0; transform: translateX(-30px); }
+          to { opacity: 1; transform: translateX(0); }
+        }
+      `}</style>
 
-export default SignIn
+      <div className="h-[90vh] flex bg-white">
+               {/* Left Side - Professional Image Panel */}
+               <div 
+          className="hidden lg:flex lg:w-1/2 relative overflow-hidden"
+          style={{ animation: 'slideInLeft 0.8s ease-out' }}
+        >
+          {/* Background Image with Overlay */}
+          <div 
+            className="absolute inset-0 bg-cover bg-center"
+            style={{
+              backgroundImage: `url('https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80')`,
+              filter: 'brightness(0.6)'
+            }}
+          />
+          <div className="absolute inset-0 bg-linear-to-br from-slate-900/90 via-slate-800/80 to-slate-900/90" />
+          
+          {/* Content Overlay */}
+          <div className="relative z-10 flex flex-col justify-between p-8 text-white w-full h-full">
+            
+            {/* Top Highlight Card: 5 Free Listings */}
+            <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-xl p-5 max-w-md" style={{ animation: 'fadeInUp 0.8s ease-out 0.2s both' }}>
+              <div className="flex items-start gap-4">
+                <div className="bg-amber-500/20 p-2.5 rounded-lg shrink-0">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                    <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                  </svg>
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-white mb-1">5 Free Top Property Listings</h3>
+                  <p className="text-sm text-slate-300 leading-relaxed">
+                    Sign in to unlock premium dashboard features and list your top properties completely free of charge.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Welcome Message */}
+            <div style={{ animation: 'fadeInUp 0.8s ease-out 0.3s both' }}>
+              <h1 className="text-4xl font-bold mb-3 leading-tight">
+                Welcome back
+              </h1>
+              <p className="text-slate-300 leading-relaxed max-w-md">
+                Track your saved properties, manage your portfolio, and continue your real estate journey with our trusted network.
+              </p>
+            </div>
+
+            {/* 6 Compact Feature Blocks */}
+            <div className="grid grid-cols-3 gap-3" style={{ animation: 'fadeInUp 0.8s ease-out 0.5s both' }}>
+              <div className="bg-white/5 backdrop-blur-sm p-3 rounded-lg border border-white/10 text-center hover:bg-white/10 transition-all duration-300">
+                <div className="text-xl font-bold text-white mb-0.5">5</div>
+                <div className="text-[10px] uppercase tracking-wider text-slate-400">Free Listings</div>
+              </div>
+              <div className="bg-white/5 backdrop-blur-sm p-3 rounded-lg border border-white/10 text-center hover:bg-white/10 transition-all duration-300">
+                <div className="text-xl font-bold text-white mb-0.5">Top</div>
+                <div className="text-[10px] uppercase tracking-wider text-slate-400">Properties</div>
+              </div>
+              <div className="bg-white/5 backdrop-blur-sm p-3 rounded-lg border border-white/10 text-center hover:bg-white/10 transition-all duration-300">
+                <div className="text-xl font-bold text-white mb-0.5">100%</div>
+                <div className="text-[10px] uppercase tracking-wider text-slate-400">Verified</div>
+              </div>
+              <div className="bg-white/5 backdrop-blur-sm p-3 rounded-lg border border-white/10 text-center hover:bg-white/10 transition-all duration-300">
+                <div className="text-xl font-bold text-white mb-0.5">24/7</div>
+                <div className="text-[10px] uppercase tracking-wider text-slate-400">Support</div>
+              </div>
+              <div className="bg-white/5 backdrop-blur-sm p-3 rounded-lg border border-white/10 text-center hover:bg-white/10 transition-all duration-300">
+                <div className="text-xl font-bold text-white mb-0.5">Zero</div>
+                <div className="text-[10px] uppercase tracking-wider text-slate-400">Hidden Fees</div>
+              </div>
+              <div className="bg-white/5 backdrop-blur-sm p-3 rounded-lg border border-white/10 text-center hover:bg-white/10 transition-all duration-300">
+                <div className="text-xl font-bold text-white mb-0.5">Fast</div>
+                <div className="text-[10px] uppercase tracking-wider text-slate-400">Access</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        {/* Right Side - Form Panel */}
+        <div className="w-full lg:w-1/2 flex items-center justify-center p-6 lg:p-10 bg-slate-50">
+          <div 
+            className="w-full max-w-sm"
+            style={{ animation: 'fadeInUp 0.6s ease-out' }}
+          >
+            {/* Form Header */}
+            <div className="mb-6">
+              <h2 className="text-2xl font-bold text-slate-900 mb-1">Sign in to your account</h2>
+              <p className="text-slate-600 text-sm">Enter your details to access your dashboard</p>
+            </div>
+
+            {/* Form */}
+            <form onSubmit={handleSubmit} className="space-y-4">
+              {/* Email */}
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                  Email address
+                </label>
+                <input 
+                  type="email" 
+                  name="email"
+                  placeholder="name@company.com" 
+                  className="w-full px-4 py-2.5 bg-white border border-slate-300 rounded-lg text-slate-900 placeholder-slate-400 focus:border-slate-900 focus:ring-2 focus:ring-slate-900/10 outline-none transition-all text-sm"
+                  value={formData.email}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+
+              {/* Password */}
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                  Password
+                </label>
+                <div className="relative">
+                  <input 
+                    type={showPassword ? "text" : "password"} 
+                    name="password"
+                    placeholder="Enter your password" 
+                    className="w-full px-4 py-2.5 pr-10 bg-white border border-slate-300 rounded-lg text-slate-900 placeholder-slate-400 focus:border-slate-900 focus:ring-2 focus:ring-slate-900/10 outline-none transition-all text-sm"
+                    value={formData.password}
+                    onChange={handleChange}
+                    required
+                  />
+                  <button 
+                    type="button" 
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors"
+                  >
+                    {showPassword ? (
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                        <line x1="1" y1="1" x2="23" y2="23"></line>
+                      </svg>
+                    ) : (
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                        <circle cx="12" cy="12" r="3"></circle>
+                      </svg>
+                    )}
+                  </button>
+                </div>
+              </div>
+
+              {/* Remember Me & Forgot Password */}
+              <div className="flex items-center justify-between">
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input 
+                    type="checkbox" 
+                    checked={rememberMe}
+                    onChange={(e) => setRememberMe(e.target.checked)}
+                    className="w-4 h-4 border-slate-300 rounded text-slate-900 focus:ring-slate-900"
+                  />
+                  <span className="text-sm text-slate-600">Remember me</span>
+                </label>
+                <a href="/forgot-password" className="text-sm font-medium text-slate-900 hover:underline">
+                  Forgot password?
+                </a>
+              </div>
+
+              {/* Submit Button */}
+              <button 
+                type="submit" 
+                disabled={loading}
+                className="w-full py-3 bg-slate-900 hover:bg-slate-800 disabled:bg-slate-700 disabled:cursor-not-allowed text-white font-medium rounded-lg transition-colors duration-200 text-sm flex items-center justify-center gap-2"
+              >
+                {loading ? (
+                  <>
+                    <svg className="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Signing in...
+                  </>
+                ) : 'Sign In'}
+              </button>
+            </form>
+
+            {/* Divider */}
+            <div className="flex items-center my-5">
+              <div className="flex-1 h-px bg-slate-200"></div>
+              <span className="px-3 text-xs text-slate-500 uppercase tracking-wider">or</span>
+              <div className="flex-1 h-px bg-slate-200"></div>
+            </div>
+
+            {/* Google Button */}
+            <button 
+              className="w-full py-2.5 bg-white border border-slate-300 hover:border-slate-400 hover:bg-slate-50 text-slate-700 font-medium rounded-lg flex items-center justify-center gap-2 transition-all duration-200 text-sm"
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24">
+                <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+                <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+              </svg>
+              Continue with Google
+            </button>
+
+            {/* Footer Link */}
+            <p className="text-center text-slate-600 text-sm mt-6">
+              Don't have an account?
+              <a href="/signup" className="text-slate-900 font-semibold ml-1 hover:underline">
+                Sign up
+              </a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+};
+
+export default SignIn;
