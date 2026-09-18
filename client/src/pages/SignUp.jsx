@@ -88,9 +88,9 @@ console.log(formData)
         }
       `}</style>
 
-      <div className="min-h-screen flex bg-white">
-        {/* Left Side - Professional Image Panel */}
-        <div 
+      <div className="h-[90vh] flex bg-white">
+              {/* Left Side - Professional Image Panel */}
+              <div 
           className="hidden lg:flex lg:w-1/2 relative overflow-hidden"
           style={{ animation: 'slideInLeft 0.8s ease-out' }}
         >
@@ -98,50 +98,71 @@ console.log(formData)
           <div 
             className="absolute inset-0 bg-cover bg-center"
             style={{
-              backgroundImage: `url('https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80')`,
-              filter: 'brightness(0.7)'
+              backgroundImage: `url('https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80')`,
+              filter: 'brightness(0.6)'
             }}
           />
           <div className="absolute inset-0 bg-linear-to-br from-slate-900/90 via-slate-800/80 to-slate-900/90" />
           
           {/* Content Overlay */}
-          <div className="relative z-10 flex flex-col justify-between p-12 text-white w-full">
-            {/* Logo/Brand */}
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-white/10 backdrop-blur-sm rounded-lg flex items-center justify-center border border-white/20">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-                  <polyline points="9 22 9 12 15 12 15 22"></polyline>
-                </svg>
+          <div className="relative z-10 flex flex-col justify-between p-8 text-white w-full h-full">
+            
+            {/* Top Highlight Card: 5 Free Listings */}
+            <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-xl p-5 max-w-md" style={{ animation: 'fadeInUp 0.8s ease-out 0.2s both' }}>
+              <div className="flex items-start gap-4">
+                <div className="bg-amber-500/20 p-2.5 rounded-lg shrink-0">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                    <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                  </svg>
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-white mb-1">5 Free Top Property Listings</h3>
+                  <p className="text-sm text-slate-300 leading-relaxed">
+                    Sign in to unlock premium dashboard features and list your top properties completely free of charge.
+                  </p>
+                </div>
               </div>
-              <span className="text-xl font-semibold tracking-wide">EstatePro</span>
             </div>
 
-            {/* Main Heading */}
+            {/* Welcome Message */}
             <div style={{ animation: 'fadeInUp 0.8s ease-out 0.3s both' }}>
-              <h1 className="text-5xl font-bold mb-6 leading-tight">
-                Sign up now
+              <h1 className="text-4xl font-bold mb-3 leading-tight">
+                Welcome back
               </h1>
-              <p className="text-xl text-slate-300 leading-relaxed max-w-md">
-                Join thousands of property investors and homebuyers finding their perfect space with us.
+              <p className="text-slate-300 leading-relaxed max-w-md">
+                Track your saved properties, manage your portfolio, and continue your real estate journey with our trusted network.
               </p>
             </div>
 
-            {/* Stats/Features */}
-            <div className="grid grid-cols-3 gap-6" style={{ animation: 'fadeInUp 0.8s ease-out 0.5s both' }}>
-              <div>
-                <div className="text-3xl font-bold mb-1">10K+</div>
-                <div className="text-sm text-slate-400">Properties Listed</div>
+            {/* 6 Compact Feature Blocks */}
+            <div className="grid grid-cols-3 gap-3" style={{ animation: 'fadeInUp 0.8s ease-out 0.5s both' }}>
+              <div className="bg-white/5 backdrop-blur-sm p-3 rounded-lg border border-white/10 text-center hover:bg-white/10 transition-all duration-300">
+                <div className="text-xl font-bold text-white mb-0.5">5</div>
+                <div className="text-[10px] uppercase tracking-wider text-slate-400">Free Listings</div>
               </div>
-              <div>
-                <div className="text-3xl font-bold mb-1">5K+</div>
-                <div className="text-sm text-slate-400">Happy Clients</div>
+              <div className="bg-white/5 backdrop-blur-sm p-3 rounded-lg border border-white/10 text-center hover:bg-white/10 transition-all duration-300">
+                <div className="text-xl font-bold text-white mb-0.5">Top</div>
+                <div className="text-[10px] uppercase tracking-wider text-slate-400">Properties</div>
               </div>
-              <div>
-                <div className="text-3xl font-bold mb-1">98%</div>
-                <div className="text-sm text-slate-400">Success Rate</div>
+              <div className="bg-white/5 backdrop-blur-sm p-3 rounded-lg border border-white/10 text-center hover:bg-white/10 transition-all duration-300">
+                <div className="text-xl font-bold text-white mb-0.5">100%</div>
+                <div className="text-[10px] uppercase tracking-wider text-slate-400">Verified</div>
+              </div>
+              <div className="bg-white/5 backdrop-blur-sm p-3 rounded-lg border border-white/10 text-center hover:bg-white/10 transition-all duration-300">
+                <div className="text-xl font-bold text-white mb-0.5">24/7</div>
+                <div className="text-[10px] uppercase tracking-wider text-slate-400">Support</div>
+              </div>
+              <div className="bg-white/5 backdrop-blur-sm p-3 rounded-lg border border-white/10 text-center hover:bg-white/10 transition-all duration-300">
+                <div className="text-xl font-bold text-white mb-0.5">Zero</div>
+                <div className="text-[10px] uppercase tracking-wider text-slate-400">Hidden Fees</div>
+              </div>
+              <div className="bg-white/5 backdrop-blur-sm p-3 rounded-lg border border-white/10 text-center hover:bg-white/10 transition-all duration-300">
+                <div className="text-xl font-bold text-white mb-0.5">Fast</div>
+                <div className="text-[10px] uppercase tracking-wider text-slate-400">Access</div>
               </div>
             </div>
+
           </div>
         </div>
 
@@ -164,7 +185,7 @@ console.log(formData)
 
             {/* Form Header */}
             <div className="mb-8">
-              <h2 className="text-3xl font-bold text-slate-900 mb-2">Create your account</h2>
+              <h2 className="text-3xl font-bold text-slate-900 mb-2 pt-5">Create your account</h2>
               <p className="text-slate-600">Start your journey to finding the perfect property</p>
             </div>
 
@@ -172,7 +193,7 @@ console.log(formData)
             <form onSubmit={handleSubmit} className="space-y-5">
               {/* Username */}
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-2">
+                <label className="block text-sm font-medium text-slate-700 ">
                   Username
                 </label>
                 <div className="relative">
@@ -188,9 +209,27 @@ console.log(formData)
                 </div>
               </div>
 
-              {/* Email */}
+              {/* Number */}
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-2">
+                <label className="block text-sm font-medium text-slate-700">
+                  Mobile Number
+                </label>
+                <div className="relative">
+                  <input 
+                    type="number" 
+                    name="number"
+                    placeholder="Enter your Number" 
+                    className="w-full px-4 py-3 bg-white border border-slate-300 rounded-lg text-slate-900 placeholder-slate-400 focus:border-slate-900 focus:ring-2 focus:ring-slate-900/10 outline-none transition-all"
+                    value={formData.number}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
+              </div>
+
+               {/* Email */}
+               <div>
+                <label className="block text-sm font-medium text-slate-700">
                   Email address
                 </label>
                 <div className="relative">
@@ -208,7 +247,7 @@ console.log(formData)
 
               {/* Password */}
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-2">
+                <label className="block text-sm font-medium text-slate-700">
                   Password
                 </label>
                 <div className="relative">
@@ -266,7 +305,7 @@ console.log(formData)
             </form>
 
             {/* Divider */}
-            <div className="flex items-center my-6">
+            <div className="flex items-center my-4">
               <div className="flex-1 h-px bg-slate-200"></div>
               <span className="px-4 text-sm text-slate-500">or continue with</span>
               <div className="flex-1 h-px bg-slate-200"></div>
@@ -286,7 +325,7 @@ console.log(formData)
             </button>
 
             {/* Footer Link */}
-            <p className="text-center text-slate-600 text-sm mt-8">
+            <p className="text-center text-slate-600 text-sm mt-3">
               Already have an account?
               <a href="/signin" className="text-slate-900 font-medium ml-1 hover:underline">
                 Sign in

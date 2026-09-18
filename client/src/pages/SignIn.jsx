@@ -21,7 +21,7 @@ const SIGNIN_SUCCESS_MESSAGE = 'Welcome back!';
 
 const SignIn = () => {
   const [formData, setFormData] = useState({
-    email: '',
+    loginBy:'',
     password: ''
   });
   const [showPassword, setShowPassword] = useState(false);
@@ -37,6 +37,7 @@ const SignIn = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault(); 
+  
     try {
       setLoading(true);
       const res = await fetch('/api/auth/signin', {
@@ -170,20 +171,20 @@ const SignIn = () => {
             <form onSubmit={handleSubmit} className="space-y-4">
               {/* Email */}
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1.5">
-                  Email address
-                </label>
-                <input 
-                  type="email" 
-                  name="email"
-                  placeholder="name@company.com" 
-                  className="w-full px-4 py-2.5 bg-white border border-slate-300 rounded-lg text-slate-900 placeholder-slate-400 focus:border-slate-900 focus:ring-2 focus:ring-slate-900/10 outline-none transition-all text-sm"
-                  value={formData.email}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
+  <label className="block text-sm font-medium text-slate-700 mb-1.5">
+    Email or phone number
+  </label>
 
+  <input
+    type="text"
+    name="loginBy"
+    placeholder="Enter email or phone number"
+    className="w-full px-4 py-2.5 bg-white border border-slate-300 rounded-lg text-slate-900 placeholder-slate-400 focus:border-slate-900 focus:ring-2 focus:ring-slate-900/10 outline-none transition-all text-sm"
+    value={formData.loginBy}
+    onChange={handleChange}
+    required
+  />
+</div>
               {/* Password */}
               <div>
                 <label className="block text-sm font-medium text-slate-700 mb-1.5">

@@ -331,14 +331,15 @@ export default function Header() {
           {!isLoggedIn ? (
             <>
               <a
-                href="/login"
+                href="/signin"
                 className="rounded-lg px-4 py-2.5 text-sm font-semibold text-gray-800 transition hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800"
               >
-                Login
+                Sign In
               </a>
 
               <a
                 href="/signup"
+                
                 className="rounded-lg bg-black px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:bg-gray-800 hover:shadow-lg dark:bg-white dark:text-black dark:hover:bg-gray-200"
               >
                 Sign Up

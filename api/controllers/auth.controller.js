@@ -5,9 +5,9 @@ import jwt from "jsonwebtoken";
 
 export const signup = async (req, res,next)=>{
 
-    const {username,email,password} = req.body
+    const {username,email,password, number} = req.body
     const hashedPassword = bcrypt.hashSync(password,10) 
-    const newUser = User({username,email,password:hashedPassword})
+    const newUser = User({username,email,number,password:hashedPassword})
    try {
     await newUser.save()
     res.status(201).json("user created successfully!")
@@ -16,6 +16,9 @@ export const signup = async (req, res,next)=>{
       const field = Object.keys(error.keyValue || {})[0]
       if (field === 'username') {
         return next(errorHandler(409, 'Username already exists'))
+      }
+      if (field === 'Number') {
+        return next(errorHandler(409, 'Number already exists'))
       }
       if (field === 'email') {
         return next(errorHandler(409, 'Email already exists'))
@@ -27,9 +30,18 @@ export const signup = async (req, res,next)=>{
 }
 
 export const signin = async (req, res,next)=>{
-  const {email,password} = req.body
+  const { loginBy, password } = req.body;
+  console.log("loginBy:", JSON.stringify(loginBy));
+  
   try {
-    const ValidUser = await User.findOne({email:email}) // here we can also just add email cause after ES6 if value and key are same we can just add the key
+    const ValidUser = await User.findOne({
+      $or: [
+        { email: loginBy },
+        { number: loginBy }
+      ]
+    });
+    console.log("ValidUser:", ValidUser);
+    // here we can also just add email cause after ES6 if value and key are same we can just add the key
     if(!ValidUser) return next(errorHandler(404, 'User not Found'))
       const ValidPassword = bcrypt.compareSync(password, ValidUser.password)
     if(!ValidPassword) return next(errorHandler(420,'Wrong Credentials!'))
@@ -40,6 +52,7 @@ export const signin = async (req, res,next)=>{
 
 
   } catch (error) {
+    console.log("SIGNIN ERROR:", error);
     next(error)
   }
 }
