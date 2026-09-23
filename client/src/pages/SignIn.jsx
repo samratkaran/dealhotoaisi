@@ -1,6 +1,9 @@
-import React, { useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from 'react';
+import {  useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
+import { useDispatch, useSelector } from 'react-redux';
+import { signInStart , signInSuccess , signInFailure } from '../redux/user/userSlice';
+
 
 const showSigninError = (message) => {
   const msg = (message || '').toLowerCase();
@@ -25,8 +28,9 @@ const SignIn = () => {
     password: ''
   });
   const [showPassword, setShowPassword] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const {loading , error} = useSelector((state)=>state.user)
   const [rememberMe, setRememberMe] = useState(false);
+  const dispatch = useDispatch()
   
  
   const navigate = useNavigate();
@@ -39,7 +43,7 @@ const SignIn = () => {
     e.preventDefault(); 
   
     try {
-      setLoading(true);
+      dispatch(signInStart)
       const res = await fetch('/api/auth/signin', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -49,19 +53,18 @@ const SignIn = () => {
       const data = await res.json();
       
       if (data.success === false) {
+        dispatch(signInFailure(data.message))
         showSigninError(data.message);
         return;
       }
-      
+      dispatch(signInSuccess(data));
       toast.success(SIGNIN_SUCCESS_MESSAGE, { id: 'signin-success' });
       navigate('/'); // Adjust route as needed
       
     } catch (error) {
+      dispatch(signInFailure(error.message))
       toast.error(error.message || 'Something went wrong', { id: 'signin-error' });
-    } finally {
-     
-      setLoading(false);
-    }
+    } 
   };
 
   return (
