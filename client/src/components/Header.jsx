@@ -529,7 +529,7 @@ export default function Header() {
 
           <div className="mt-4 border-t border-gray-200 pt-4 dark:border-gray-800">
 
-            {!isLoggedIn ? (
+            {!currentUser ? (
               <div className="flex gap-2">
 
                 <a
@@ -550,9 +550,9 @@ export default function Header() {
             ) : (
               <div className="flex items-center gap-3 px-2">
 
-                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-200 font-semibold dark:bg-gray-700">
-                  KS
-                </div>
+                <img src={currentUser.avatar} alt="avatar" className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-200 font-semibold dark:bg-gray-700">
+                  
+                </img>
 
                 <div>
                   <p className="text-sm font-semibold dark:text-white">
