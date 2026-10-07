@@ -1,5 +1,6 @@
 
 import { Link } from "react-router-dom";
+import { useState } from "react";
 import {
   User,
   Mail,
@@ -17,7 +18,112 @@ import {
 import { useSelector } from "react-redux";
 
 function Profile() {
-  const {currentUser} = useSelector(state => state.user)
+  const { currentUser } = useSelector((state) => state.user);
+
+  const [avatarUrl, setAvatarUrl] = useState(currentUser?.avatar || "");
+  const [fileUploadError, setFileUploadError] = useState(false);
+  const [filePerc, setFilePerc] = useState(0);
+  const [isUploading, setIsUploading] = useState(false)
+ 
+
+
+  const handleFileUpload = (file) => {
+    try {
+      setFileUploadError(false);
+      setFilePerc(0);
+  
+      if (!file) return;
+  
+      // Check file size
+      if (file.size > 2 * 1024 * 1024) {
+        setFileUploadError(true);
+        return;
+      }
+  
+      // Check file type
+      if (!file.type.startsWith("image/")) {
+        setFileUploadError(true);
+        return;
+      }
+  
+      setIsUploading(true);
+  
+      const formData = new FormData();
+      formData.append("avatar", file);
+  
+      const xhr = new XMLHttpRequest();
+  
+      // Actual upload progress
+      xhr.upload.addEventListener("progress", (event) => {
+        if (event.lengthComputable) {
+          const progress = Math.round(
+            (event.loaded / event.total) * 100
+          );
+  
+          console.log("Upload progress:", progress);
+  
+          setFilePerc(progress);
+        }
+      });
+  
+      xhr.addEventListener("load", () => {
+        try {
+          const data = JSON.parse(xhr.responseText);
+  
+          console.log("Avatar response:", data);
+  
+          if (
+            xhr.status >= 200 &&
+            xhr.status < 300 &&
+            data.success
+          ) {
+            setAvatarUrl(data.url);
+            setFilePerc(100);
+  
+            // Keep success state visible
+            setTimeout(() => {
+              setIsUploading(false);
+            }, 500);
+          } else {
+            setFileUploadError(true);
+            setFilePerc(0);
+            setIsUploading(false);
+          }
+        } catch (error) {
+          console.error("Response parsing error:", error);
+  
+          setFileUploadError(true);
+          setFilePerc(0);
+          setIsUploading(false);
+        }
+      });
+  
+      xhr.addEventListener("error", () => {
+        console.error("Avatar upload failed");
+  
+        setFileUploadError(true);
+        setFilePerc(0);
+        setIsUploading(false);
+      });
+  
+      xhr.addEventListener("abort", () => {
+        setFileUploadError(true);
+        setFilePerc(0);
+        setIsUploading(false);
+      });
+  
+      xhr.open("POST", "/api/user/upload-avatar");
+  
+      xhr.send(formData);
+  
+    } catch (error) {
+      console.error("Avatar upload error:", error);
+  
+      setFileUploadError(true);
+      setFilePerc(0);
+      setIsUploading(false);
+    }
+  };
   return (
     <div className="relative min-h-screen overflow-hidden bg-slate-50 px-4 py-10 sm:px-6 lg:px-8">
       {/* ================= BACKGROUND EFFECTS ================= */}
@@ -26,7 +132,7 @@ function Profile() {
         {/* Large blurred circle */}
         <div className="absolute -left-32 -top-32 h-96 w-96 rounded-full bg-blue-200/30 blur-3xl" />
 
-        <div className="absolute -bottom-40 -right-32 h-[28rem] w-[28rem] rounded-full bg-purple-200/30 blur-3xl" />
+        <div className="absolute -bottom-40 -right-32 h-112 w-md rounded-full bg-purple-200/30 blur-3xl" />
 
         {/* Rotating shapes */}
         <div className="absolute right-[12%] top-24 h-20 w-20 rotate-12 rounded-3xl border border-blue-200/50 bg-blue-100/20 backdrop-blur-sm transition-transform duration-1000 hover:rotate-45" />
@@ -75,7 +181,7 @@ function Profile() {
             "
           >
             {/* Card gradient */}
-            <div className="pointer-events-none absolute -right-24 -top-24 h-56 w-56 rounded-full bg-gradient-to-br from-indigo-200/40 to-purple-200/20 blur-3xl transition-transform duration-700 group-hover:scale-125" />
+            <div className="pointer-events-none absolute -right-24 -top-24 h-56 w-56 rounded-full bg-linear-to-br from-indigo-200/40 to-purple-200/20 blur-3xl transition-transform duration-700 group-hover:scale-125" />
 
             {/* Profile Header */}
 
@@ -85,12 +191,13 @@ function Profile() {
 
               <div className="relative">
 
-                <img src={currentUser.avatar}
+                <img 
+                src={avatarUrl || currentUser.avatar}
                 alt="avatar"
                   className="
                     flex h-24 w-24 items-center justify-center
                     rounded-[2rem]
-                    bg-gradient-to-br from-gray-900 via-gray-800 to-gray-950
+                    bg-linear-to-br from-gray-900 via-gray-800 to-gray-950
                     text-3xl font-bold text-white
                     shadow-xl
                     transition-all duration-500
@@ -124,23 +231,61 @@ function Profile() {
                   Property buyer & seller
                 </p>
 
-                <button
-                  className="
-                    mt-4 inline-flex items-center gap-2
-                    rounded-xl border border-gray-200
-                    bg-white px-4 py-2
-                    text-sm font-medium text-gray-700
-                    shadow-sm
-                    transition-all duration-300
-                    hover:-translate-y-0.5
-                    hover:border-gray-300
-                    hover:bg-gray-50
-                    hover:shadow-md
-                  "
-                >
-                  <Pencil className="h-4 w-4 transition-transform duration-300 group-hover:rotate-12" />
-                  Change Avatar
-                </button>
+                <label
+  htmlFor="avatar-upload"
+  className="
+    mt-4 inline-flex cursor-pointer items-center gap-2
+    rounded-xl border border-gray-200
+    bg-white px-4 py-2
+    text-sm font-medium text-gray-700
+    shadow-sm
+    transition-all duration-300
+    hover:-translate-y-0.5
+    hover:border-gray-300
+    hover:bg-gray-50
+    hover:shadow-md
+  "
+>
+  <Pencil className="h-4 w-4" />
+  Change Avatar
+</label>
+
+<input
+  onChange={(e) => handleFileUpload(e.target.files[0])}
+  id="avatar-upload"
+  type="file"
+  accept="image/*"
+  className="hidden"
+/>
+{filePerc > 0 && filePerc < 100 && (
+  <div className="mt-3 w-full max-w-xs">
+    <div className="mb-1 flex justify-between text-xs text-gray-500">
+      <span>Uploading</span>
+      <span>{filePerc}%</span>
+    </div>
+
+    <div className="h-2 w-full overflow-hidden rounded-full bg-gray-200">
+      <div
+        className="h-full rounded-full bg-gray-900 transition-all duration-200"
+        style={{ width: `${filePerc}%` }}
+      />
+    </div>
+  </div>
+)}
+
+{fileUploadError && (
+  <p className="mt-2 text-sm text-red-600">
+    Error uploading image. Image must be less than 2MB.
+  </p>
+)}
+
+{filePerc === 100 && !fileUploadError && (
+  <p className="mt-2 text-sm text-green-600">
+    Image uploaded successfully!
+  </p>
+)}
+                  
+                
               </div>
             </div>
 
@@ -183,6 +328,7 @@ function Profile() {
                 <label className="mb-2 block text-sm font-semibold text-gray-700">
                   Email Address
                 </label>
+
 
                 <div
                   className="
@@ -263,7 +409,7 @@ function Profile() {
                     Update Profile
                   </span>
 
-                  <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/10 to-transparent transition-transform duration-700 group-hover/update:translate-x-full" />
+                  <span className="absolute inset-0 -translate-x-full bg-linear-to-r from-transparent via-white/10 to-transparent transition-transform duration-700 group-hover/update:translate-x-full" />
                 </button>
               </div>
             </div>
