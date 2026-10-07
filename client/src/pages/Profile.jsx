@@ -1,6 +1,7 @@
 
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import { updateUser } from "../redux/user/userSlice";
 import {
   User,
   Mail,
@@ -15,15 +16,18 @@ import {
   Sparkles,
   ArrowUpRight,
 } from "lucide-react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 
 function Profile() {
+  const dispatch = useDispatch();
+
   const { currentUser } = useSelector((state) => state.user);
 
   const [avatarUrl, setAvatarUrl] = useState(currentUser?.avatar || "");
   const [fileUploadError, setFileUploadError] = useState(false);
   const [filePerc, setFilePerc] = useState(0);
   const [isUploading, setIsUploading] = useState(false)
+  const [formData, setFormData] = useState({})
  
 
 
@@ -79,15 +83,17 @@ function Profile() {
           ) {
             setAvatarUrl(data.url);
             setFilePerc(100);
-  
-            // Keep success state visible
+          
+            dispatch(
+              updateUser({
+                ...currentUser,
+                avatar: data.url,
+              })
+            );
+          
             setTimeout(() => {
               setIsUploading(false);
             }, 500);
-          } else {
-            setFileUploadError(true);
-            setFilePerc(0);
-            setIsUploading(false);
           }
         } catch (error) {
           console.error("Response parsing error:", error);

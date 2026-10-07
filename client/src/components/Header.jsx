@@ -41,8 +41,10 @@ const applyDocumentTheme = (isDark) => {
   localStorage.setItem(THEME_STORAGE_KEY, isDark ? "dark" : "light");
 };
 
+
 export default function Header() {
-  const {currentUser} = useSelector(state =>state.user)
+  const { currentUser } = useSelector((state) => state.user);
+
   const [isDark, setIsDark] = useState(getPreferredDark);
   const [activeMenu, setActiveMenu] = useState(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -358,7 +360,7 @@ export default function Header() {
                 className="flex items-center gap-2 rounded-full border border-gray-200 p-1 pr-3 transition hover:bg-gray-100 dark:border-gray-700 dark:hover:bg-gray-800"
               >
 
-                <img src={currentUser.avatar} alt={currentUser.name} className="flex h-9 w-9 items-center justify-center rounded-full bg-gray-700 text-sm font-semibold text-gray-700 dark:bg-gray-700 dark:text-white">
+                <img  src={currentUser.avatar} alt={currentUser.name} className="flex h-9 w-9 items-center justify-center rounded-full bg-gray-700 text-sm font-semibold text-gray-700 dark:bg-gray-700 dark:text-white">
                   
                 </img>
 
